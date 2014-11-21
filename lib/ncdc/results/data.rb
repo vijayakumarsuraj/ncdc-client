@@ -9,8 +9,6 @@ module Ncdc
     # Base class for actual weather data.
     class Data < Ncdc::Result
 
-      # The type of the reading. Usually, specific sub-classes of each type should be used.
-      attr_reader :type
       # The value of this data.
       attr_reader :value
       # The date of the reading.
@@ -22,7 +20,6 @@ module Ncdc
       def initialize(details)
         super(details)
 
-        @type = details.fetch('datatype')
         @value = details.fetch('value')
         @date = Time.parse(details.fetch('date'))
       end

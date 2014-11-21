@@ -31,27 +31,6 @@ module Ncdc
       include Ncdc::Results::WrapsIdAndName
       include Ncdc::Results::WrapsDates
 
-      # Gets the elevation of this station above sea level (in metres).
-      #
-      # @return [Numeric]
-      def elevation
-        @details['elevation']
-      end
-
-      # Gets the latitude of this station.
-      #
-      # @return [Float]
-      def latitude
-        @details['latitude']
-      end
-
-      # Gets the longitude of this station.
-      #
-      # @return [Float]
-      def longitude
-        @details['longitude']
-      end
-
       # Gets the data categories for this station.
       #
       # @return [Array<Ncdc::Results::DataCategory>]
@@ -95,8 +74,8 @@ module Ncdc
         splits[1..-1].each do |to_part|
           start_date = Ncdc::Client.strftime(from_part)
           end_date = Ncdc::Client.strftime(to_part - 1)
-          params = {'stationid' => id, 'datasetid' => set, 'datatypeid' => type, 'startdate' => start_date, 'enddate' => end_date}
-          all_results += @client.get_data(params)
+          params = {'stationid' => id, 'datatypeid' => type}
+          all_results += @client.get_data(set, start_date, end_date, params)
           from_part = to_part
         end
         # Return the full list of results.

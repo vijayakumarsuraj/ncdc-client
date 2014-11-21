@@ -45,6 +45,14 @@ describe 'NCDC client' do
     datatypes = station.data_types
     expect(datatypes).not_to be_empty
   end
+  it 'should return data for a particular station' do
+    id = 'COOP:137312'
+    station = @client.get_station(id)
+    datasets = station.data_sets
+    datatypes = station.data_types
+    data = station.get_data(datasets[0].id, datatypes[0].id, Date.new(2013, 10, 01), Date.new(2014, 10, 31))
+    expect(data).not_to be_empty
+  end
   it 'should raise an error for invalid station data' do
     station = @client.request_single('stations', 'COOP:029015')
     station.delete('id')
@@ -54,5 +62,10 @@ describe 'NCDC client' do
     station = @client.request_single('locations', 'CITY:AO000005')
     station.delete('maxdate')
     expect { Ncdc::Results::Station.new(station, @client) }.to raise_error(Ncdc::Error)
+  end
+  it 'should raise an error for an invalid attribute' do
+    id = 'CITY'
+    category = @client.get_locationcategory(id)
+    expect { category.random_attribute }.to raise_error(Ncdc::Error)
   end
 end

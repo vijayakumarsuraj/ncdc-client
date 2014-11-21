@@ -106,9 +106,13 @@ module Ncdc
     # Sends a request to the remote server for 'data'.
     #
     # @param [Hash] params
-    def get_data(params = {})
+    def get_data(datasetid, startdate, enddate, params = {})
+      params['datasetid'] = datasetid
+      params['startdate'] = startdate
+      params['enddate'] = enddate
+
       request_list('data', params).map do |details|
-        DATA_CLASSES.fetch(details.fetch('datatype')).new(details)
+        DATA_CLASSES.fetch(details.fetch('datatype'), Ncdc::Result).new(details)
       end
     end
 
